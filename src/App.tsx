@@ -1,5 +1,9 @@
+import { Button } from "./components/ui/button";
+
 export function App() {
   return (
-    <h1 className="bg-zinc-500">Hello World</h1>
+    <div className="flex items-center justify-center h-screen">
+      <Button>Enviar</Button>
+    </div>
   )
 }
