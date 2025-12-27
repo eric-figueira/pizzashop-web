@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowBigRight, ArrowRight, Search, X } from "lucide-react";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Helmet } from "react-helmet-async";
+import { OrderTableRow } from "./order-table-row";
+import { OrderTableFilters } from "./order-table-filters";
 
 export function Orders() {
   return (
@@ -13,10 +13,7 @@ export function Orders() {
         <h1 className="text-3xl font-bold tracking-tight">Pedidos</h1>
       </div>
       <div className="space-y-2.5">
-        <form className="flex items-center gap-2">
-          <span className="text-sm font-semibold">Filtros:</span>
-          <Input placeholder="Nome do cliente" className="h-8 w-[320px]" />
-        </form>
+        <OrderTableFilters />
 
         <div className="border rounded-md">
           <Table>
@@ -36,36 +33,7 @@ export function Orders() {
             <TableBody>
               {Array.from({ length: 10 }).map(() => {
                 return (
-                  <TableRow>
-                    <TableCell>
-                      <Button variant="outline" size="xs">
-                        <Search className="size-3" />
-                        <span className="sr-only">Detalhes do pedido</span>
-                      </Button>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs font-medium">q1alse10dj6sd09</TableCell>
-                    <TableCell className="text-muted-foreground">há 15 minutos</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span className="size-2 rounded-full bg-slate-400" />
-                        <span className="font-medium text-muted-foreground">Pendente</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">Eric Figueira</TableCell>
-                    <TableCell className="font-medium">R$ 149,90</TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="xs">
-                        <ArrowRight className="size-3 mr-2" />
-                        Aprovar
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="xs">
-                        <X className="size-3 mr-2" />
-                        Cancelar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  <OrderTableRow />
                 )
               })} 
             </TableBody>
