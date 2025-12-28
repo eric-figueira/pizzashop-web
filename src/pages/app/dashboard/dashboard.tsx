@@ -1,8 +1,9 @@
 import { Helmet } from "react-helmet-async";
-import { MonthlyRevenueCard } from "./monthly-revenue-card";
-import { MonthlyOrdersAmountCard } from "./monthly-orders-amount-card";
 import { DailyOrdersAmountCard } from "./daily-orders-amount-card";
 import { MonthlyCancelledOrdersAmountCard } from "./monthly-cancelled-orders-amount-card";
+import { MonthlyOrdersAmountCard } from "./monthly-orders-amount-card";
+import { MonthlyRevenueCard } from "./monthly-revenue-card";
+import { PopularProductsChart } from "./popular-products-chart";
 import { RevenueChart } from "./revenue-chart";
 
 export function Dashboard() {
@@ -22,6 +23,7 @@ export function Dashboard() {
 
         <div className="grid grid-cols-9 gap-4">
           <RevenueChart />
+          <PopularProductsChart />
         </div>
       </div>
     </>
