@@ -2,6 +2,7 @@ import { registerRestaurant } from "@/api/register-restaurant"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Spinner } from "@/components/ui/spinner"
 import { useMutation } from "@tanstack/react-query"
 import { Helmet } from "react-helmet-async"
 import { useForm } from 'react-hook-form'
@@ -88,7 +89,7 @@ export function SignUp() {
             </div>
 
             <Button disabled={isSubmitting} type="submit" className="w-full">
-              Finalizar cadastro
+              {isSubmitting ? <Spinner /> : <>Finalizar cadastro</>}
             </Button>
 
             <p className="px-6 text-center text-sm text-muted-foreground">Ao continuar, você concorda com nossos <a href="" className="underline underline-offset-4">termos de serviço</a> e <a href="" className="underline underline-offset-4">políticas de privacidade</a>.</p>

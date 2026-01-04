@@ -2,6 +2,7 @@ import { signIn } from "@/api/sign-in"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Spinner } from "@/components/ui/spinner"
 import { useMutation } from "@tanstack/react-query"
 import { Helmet } from "react-helmet-async"
 import { useForm } from 'react-hook-form'
@@ -69,7 +70,7 @@ export function SignIn() {
             </div>
 
             <Button disabled={isSubmitting} type="submit" className="w-full">
-              Acessar painel
+              {isSubmitting ? <Spinner /> : <>Acessar painel</>}
             </Button>
           </form>
         </div>
