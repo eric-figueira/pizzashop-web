@@ -1,7 +1,14 @@
+import { getMonthlyOrdersAmount } from "@/api/get-monthly-orders-amount";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
 import { Utensils } from "lucide-react";
 
 export function MonthlyOrdersAmountCard() {
+  const { data: monthlyOrdersAmount } = useQuery({
+    queryFn: getMonthlyOrdersAmount,
+    queryKey: ['metrics', 'monthly-orders-amount']
+  })
+
   return (
     <Card className="bg-background">
       <CardHeader className="flex-row items-center justify-between space-y-0 pt-0 pb-2">
@@ -9,11 +16,28 @@ export function MonthlyOrdersAmountCard() {
         <Utensils className="size-4 text-muted-foreground" />
       </CardHeader>
       <CardContent className="space-y-2">
-        <span className="text-3xl font-bold tracking-tight block">246</span>
-        <p className="text-sm text-muted-foreground">
-          <span className="text-emerald-500 dark:text-emerald-400">+10%</span>{" "}
-          em relação ao mês passado
-        </p>
+        {monthlyOrdersAmount && (
+          <>
+            <span className="text-3xl font-bold tracking-tight block">
+              {monthlyOrdersAmount?.amount.toLocaleString('pt-BR')}
+            </span>
+            <p className="text-sm text-muted-foreground">
+              {monthlyOrdersAmount.diffFromLastMonth >= 0 ? (
+                <>
+                  <span className="text-emerald-500 dark:text-emerald-400">
+                    +{monthlyOrdersAmount.diffFromLastMonth}%
+                  </span> em relação ao mês passado
+                </>
+              ) : (
+                <>
+                <span className="text-rose-500 dark:text-rose-400">
+                  {monthlyOrdersAmount.diffFromLastMonth}%
+                </span> em relação ao mês passado
+                </>
+              )}
+            </p>
+          </>
+        )}
       </CardContent>
     </Card>
   )
