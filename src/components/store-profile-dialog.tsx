@@ -1,13 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { getManagedRestaurant } from "@/api/get-managed-restaurant";
+import { getManagedRestaurant, type GetManagedRestaurantResponse } from "@/api/get-managed-restaurant";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { updateProfile } from "@/api/update-profile";
+import { toast } from "sonner";
+import { Spinner } from "./ui/spinner";
 
 const storeProfileSchema = z.object({
   name: z.string().min(1),
@@ -17,15 +20,19 @@ const storeProfileSchema = z.object({
 type StoreProfile = z.infer<typeof storeProfileSchema>
 
 export function StoreProfileDialog() {
+  const queryClient = useQueryClient()
+
   // react query wont make this query again since it has already been made in account-menu (cache)
-  const { data: managedRestaurant, isLoading: isManagedRestaurantLoading } = useQuery({
+  const { data: managedRestaurant } = useQuery({
     queryKey: ['managed-restaurant'],
-    queryFn: getManagedRestaurant
+    queryFn: getManagedRestaurant,
+    staleTime: Infinity,
   })
 
   const {
     register,
-    handleSubmit
+    handleSubmit,
+    formState: { isSubmitting }
   } = useForm<StoreProfile>({
     resolver: zodResolver(storeProfileSchema),
     values: {
@@ -33,6 +40,34 @@ export function StoreProfileDialog() {
       description: managedRestaurant?.description ?? '',
     },
   })
+
+  const { mutateAsync: updateProfileFn } = useMutation({
+    mutationFn: updateProfile,
+    onSuccess(_, { name, description }) {
+      const cached = queryClient.getQueryData<GetManagedRestaurantResponse>(['managed-restaurant'])
+      
+      if (cached) {
+        queryClient.setQueryData<GetManagedRestaurantResponse>(['managed-restaurant'], {
+          ...cached,
+          name,
+          description,
+        })
+      }
+    }
+  })
+
+  async function handleUpdateProfile(data: StoreProfile) {
+    try {
+      await updateProfileFn({
+        name: data.name,
+        description: data.description,
+      })
+
+      toast.success('Perfil atualizado com sucesso.')
+    } catch {
+      toast.error('Falha ao atualizar o perfil.')
+    }
+  }
 
   return (
     <DialogContent>
@@ -43,7 +78,7 @@ export function StoreProfileDialog() {
         </DialogDescription>
       </DialogHeader>
 
-      <form action="">
+      <form onSubmit={handleSubmit(handleUpdateProfile)}>
         <div className="space-y-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right" htmlFor="name">
@@ -66,8 +101,16 @@ export function StoreProfileDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button variant={"ghost"} type="button">Cancelar</Button>
-          <Button variant={"success"} type="submit">Salvar</Button>
+          <DialogClose>
+            <Button variant={"ghost"} type="button">Cancelar</Button>
+          </DialogClose>
+          <Button 
+            variant={"success"} 
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <Spinner /> : <>Salvar</>}
+          </Button>
         </DialogFooter>
       </form>
     </DialogContent>
