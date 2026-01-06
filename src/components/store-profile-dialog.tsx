@@ -14,7 +14,7 @@ import { Spinner } from "./ui/spinner";
 
 const storeProfileSchema = z.object({
   name: z.string().min(1),
-  description: z.string(),
+  description: z.string().nullable(),
 })
 
 type StoreProfile = z.infer<typeof storeProfileSchema>
@@ -41,17 +41,32 @@ export function StoreProfileDialog() {
     },
   })
 
+  function updateManagedRestaurantCache({ name,description }: StoreProfile) {
+    const cached = queryClient.getQueryData<GetManagedRestaurantResponse>(['managed-restaurant'])
+      
+    if (cached) {
+      queryClient.setQueryData<GetManagedRestaurantResponse>(['managed-restaurant'], {
+        ...cached,
+        name,
+        description,
+      })
+    }
+
+    return { cached }
+  }
+
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
-    onSuccess(_, { name, description }) {
-      const cached = queryClient.getQueryData<GetManagedRestaurantResponse>(['managed-restaurant'])
-      
-      if (cached) {
-        queryClient.setQueryData<GetManagedRestaurantResponse>(['managed-restaurant'], {
-          ...cached,
-          name,
-          description,
-        })
+    onMutate({ name, description }) {
+      const { cached } = updateManagedRestaurantCache({ name, description })
+
+      return { previousProfile: cached }
+
+    },
+    // optimistc interface
+    onError(_error, _variables, context) {
+      if (context?.previousProfile) {
+        updateManagedRestaurantCache(context.previousProfile)
       }
     }
   })
