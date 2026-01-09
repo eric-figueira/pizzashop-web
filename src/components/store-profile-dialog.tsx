@@ -61,7 +61,6 @@ export function StoreProfileDialog() {
       const { cached } = updateManagedRestaurantCache({ name, description })
 
       return { previousProfile: cached }
-
     },
     // optimistc interface
     onError(_error, _variables, context) {

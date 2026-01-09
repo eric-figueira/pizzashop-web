@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 
-type OrderStatus = "pending" | "processing" | "delivering" | "delivered" | "cancelled"
+export type OrderStatus = "pending" | "processing" | "delivering" | "delivered" | "cancelled"
 
 interface OrderStatusProps {
   status: OrderStatus
