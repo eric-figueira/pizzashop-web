@@ -5,6 +5,7 @@ import { BarChart } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { getPopularProducts } from "@/api/get-popular-products";
+import { Spinner } from "@/components/ui/spinner";
 
 const COLORS = [
   colors.sky[500],
@@ -29,7 +30,7 @@ export function PopularProductsChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {popularProducts && (
+        {popularProducts ? (
           <ResponsiveContainer width="100%" height={240}>
             <PieChart style={{ fontSize: 12 }}>       
               <Pie 
@@ -84,6 +85,10 @@ export function PopularProductsChart() {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <Spinner className="size-8" />
+          </div>
         )}
       </CardContent>
     </Card>
