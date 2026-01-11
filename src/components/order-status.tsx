@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 
 export type OrderStatus = "pending" | "processing" | "delivering" | "delivered" | "cancelled"
 
@@ -25,7 +25,7 @@ const orderStatusColorMap: Record<OrderStatus, string> = {
 export function OrderStatus({ status }: OrderStatusProps) {
   return (
     <div className="flex items-center gap-2">
-      <span className={cn("size-2 rounded-full", orderStatusColorMap[status])} />
+      <span data-testid="badge" className={cn("size-2 rounded-full", orderStatusColorMap[status])} />
       <span className="font-medium text-muted-foreground">{orderStatusTextMap[status]}</span>
     </div>
   )
