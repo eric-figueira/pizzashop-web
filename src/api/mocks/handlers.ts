@@ -9,6 +9,12 @@ import { getDailyRevenueInPeriodMock } from './get-daily-revenue-in-period'
 import { getProfileMock } from './get-profile'
 import { getManagedRestaurantMock } from './get-managed-restaurant'
 import { updateProfileMock } from './update-profile'
+import { getOrdersMock } from './get-orders'
+import { getOrderDetailsMock } from './get-order-details'
+import { approveOrderMock } from './approve-order'
+import { cancelOrderMock } from './cancel-order'
+import { deliverOrderMock } from './deliver-order'
+import { dispatchOrderMock } from './dispatch-order'
 
 export const handlers = [
   signInMock,
@@ -22,4 +28,10 @@ export const handlers = [
   getProfileMock,
   getManagedRestaurantMock,
   updateProfileMock,
+  getOrdersMock,
+  getOrderDetailsMock,
+  approveOrderMock,
+  cancelOrderMock,
+  dispatchOrderMock,
+  deliverOrderMock,
 ]
